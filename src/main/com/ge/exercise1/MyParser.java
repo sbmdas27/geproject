@@ -11,7 +11,7 @@ public class MyParser implements Parser{
 	Application geApplication;
 	List<GEUser> userList;
 	List<GEGroup> groupList;
-	User user;
+	
 
 	@Override
 	public Application parseApplicationData(String data) {
@@ -22,6 +22,7 @@ public class MyParser implements Parser{
 		ArrayList<String> list = new ArrayList<>();
 		Set<Character> specials = new HashSet<>(Arrays.asList('(',')','[',']',',',':'));
 		StringBuilder sb = new StringBuilder();
+		int grpCounter = 0;
 
 		boolean afterSpecials = false;
 
@@ -53,14 +54,25 @@ public class MyParser implements Parser{
 				userList = new ArrayList<>();
 			}else if("groups".equals(list.get(i))){
 				groupList = new ArrayList<>();
+				grpCounter = i;
+				break;
 			}else if("User".equals(list.get(i)) && userList != null){
 				userList.add(new GEUser(list.get(i+2),list.get(i+4)));
 				i=i+4;
-			}else if("Group".equals(list.get(i)) && groupList != null){
-				groupList.add(new GEGroup(list.get(i+2),list.get(i+4)));
-				i=i+4;
 			}
 		}
+		
+		for(;grpCounter<list.size();grpCounter++){
+			if("Group".equals(list.get(grpCounter))){
+				groupList.add(new GEGroup(list.get(grpCounter+2), list.get(grpCounter+4)));
+				grpCounter = grpCounter+4;
+			}else if("User".equals(list.get(grpCounter))){
+				GEUser user = new GEUser(list.get(grpCounter+2),list.get(grpCounter+4));
+				groupList.get(groupList.size()-1).addUser(user);
+				grpCounter = grpCounter+4;
+			}
+		}
+		
 		
 		if(!"".equals(appId) && !"".equals(appName) && userList!=null && groupList != null){
 			geApplication = new GEApplication(appId, appName, userList, groupList);
