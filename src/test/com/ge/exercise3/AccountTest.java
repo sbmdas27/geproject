@@ -37,7 +37,7 @@ public class AccountTest {
         assertEquals(90.0f, checkingAccount.valueNextMonth(), 0.01f);
 
         savingsAccount.setMonthlyInterestRate(1.05f);
-        assertEquals(105.0f, savingsAccount.valueNextMonth(), 0.01f);
+        assertEquals(101.05f, savingsAccount.valueNextMonth(), 0.01f);
     }
 
     @Test

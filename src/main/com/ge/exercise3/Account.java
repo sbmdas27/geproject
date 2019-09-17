@@ -35,7 +35,7 @@ public class Account {
     }
     
     public float valueNextMonth() {
-        return (balance * monthlyInterestRate) - monthlyFee;
+    	return balance+((monthlyInterestRate/100)*balance) - monthlyFee;
     }
 
     @Override
