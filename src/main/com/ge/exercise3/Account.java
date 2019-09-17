@@ -7,9 +7,8 @@ public class Account {
 
     private static final Logger logger = LogManager.getLogger(Account.class);
 
-    private static float monthlyInterestRate = 1.01f;
-    private static float monthlyFee = 0.0f;
-
+    private float monthlyInterestRate;
+    private float monthlyFee;
     private String accountNumber;
     private String accountType;
     private float balance;
@@ -18,19 +17,23 @@ public class Account {
         this.accountNumber = accountNumber;
         this.accountType = accountType;
         this.balance = balance;
-        if (accountType == "Checking") {
-            monthlyInterestRate = 1.0f;
+        this.monthlyFee = 0.0f;
+        if ("Checking".equals(accountType)) {
+            this.monthlyInterestRate = 0.0f;
+        }
+        if ("Savings".equals(accountType)) {
+            this.monthlyInterestRate = 1.0f;
         }
     }
 
     public Account(String accountNumber, String accountType) {
-        new Account(accountNumber, accountType, 0.0f);
+        this(accountNumber, accountType, 0.0f);
     }
 
     public Account(String accountNumber) {
-        new Account(accountNumber, "Savings", 0.0f);
+        this(accountNumber, "Savings", 0.0f);
     }
-
+    
     public float valueNextMonth() {
         return (balance * monthlyInterestRate) - monthlyFee;
     }
@@ -65,7 +68,13 @@ public class Account {
     }
 
     public void withdraw(float amount) {
-        balance -= amount;
+    	if("Checkings".equals(this.accountType) && amount > 100.0f){
+    		logger.error("Cannot withdraw more thank $100 for Checking account");
+    	}else if(balance - amount < 0){
+    		logger.error("You do not have sufficient funds to withdraw.");
+    	}else{
+    		balance -= amount;
+    	}
     }
 
     public float getMonthlyInterestRate() {

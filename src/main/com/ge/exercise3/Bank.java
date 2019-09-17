@@ -1,10 +1,10 @@
 package com.ge.exercise3;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Bank {
 
@@ -34,4 +34,27 @@ public class Bank {
     public int numAccounts() {
         return accountMap.size();
     }
+    
+    public float currentHoldings(){
+    	float sum = 0.0f;
+    	for (Map.Entry<String, Account> entry : accountMap.entrySet()) {
+    	    sum += entry.getValue().getBalance();
+    	}
+    	logger.debug("Current holding "+ sum);
+    	return sum;
+    }
+    
+    public void predictNextMonthProfitLoss(){
+    	float profitOrLoss = 0.0f;
+    	for (Map.Entry<String, Account> entry : accountMap.entrySet()) {
+    		Account account = entry.getValue();
+    		profitOrLoss += account.valueNextMonth();
+    	}
+    	if(profitOrLoss>0){
+    		logger.debug("Bank will produce profit of "+ profitOrLoss +" next month");
+    	}else{
+    		logger.debug("Bank will produce loss of "+ profitOrLoss +" next month");
+    	}
+    }
+    
 }
